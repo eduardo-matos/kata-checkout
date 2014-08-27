@@ -1,8 +1,10 @@
+# coding: utf-8
+
 import unittest
-from checkout.checkout import Checkout
+from checkout.checkout import Checkout, PriceRules
 
 
-__all__ = ['CheckoutTest']
+__all__ = ['CheckoutTest', 'PriceRulesTest']
 
 
 class CheckoutTest(unittest.TestCase):
@@ -50,3 +52,21 @@ class CheckoutTest(unittest.TestCase):
     def test_can_deal_with_unsorted_items(self):
         self.co.scan('BABAAC')
         self.assertEqual(195, self.co.price)
+
+
+class PriceRulesTest(unittest.TestCase):
+    def setUp(self):
+        self.pr = PriceRules()
+
+    def test_can_add_rule(self):
+        self.pr.add_rule('A', 10)
+        self.assertEqual({1: {'A': 10}}, self.pr.rules)
+
+        self.pr.add_rule('A', 25, 3)
+        self.assertEqual({1: {'A': 10}, 3: {'A': 25}}, self.pr.rules)
+
+    def test_raise_error_if_rule_item_has_more_than_one_character(self):
+        self.assertRaises(ValueError, self.pr.add_rule, 'AA', 10)
+
+    def test_not_raise_error_if_rule_item_is_unicode(self):
+        self.pr.add_rule(u'☢', 10)

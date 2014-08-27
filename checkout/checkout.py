@@ -1,5 +1,8 @@
 # coding: utf-8
 
+from collections import OrderedDict
+
+
 item_prices_one = {
     'A': 50,
     'B': 30,
@@ -14,6 +17,25 @@ item_prices_two = {
 item_prices_three = {
     'AAA': 130,
 }
+
+
+class PriceRules(object):
+
+    def __init__(self):
+        self._rules = {}
+
+    def add_rule(self, item, price, quantity=1):
+        if len(item) > 1:
+            raise ValueError('Item name must have 1 character only')
+
+        if quantity not in self._rules:
+            self._rules[quantity] = {}
+
+        self._rules[quantity][item] = price
+
+    @property
+    def rules(self):
+        return OrderedDict(sorted(self._rules.items()))
 
 
 class Checkout(object):
