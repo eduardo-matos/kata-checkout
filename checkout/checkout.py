@@ -1,22 +1,43 @@
 # coding: utf-8
 
+item_prices_one = {
+    'A': 50,
+    'B': 30,
+    'C': 20,
+    'D': 15,
+}
+
+item_prices_two = {
+    'BB': 45,
+}
+
+item_prices_three = {
+    'AAA': 130,
+}
+
+
 class Checkout(object):
-    _price = 0
+    items = ''
 
     def scan(self, item):
-        if item == 'A':
-            self.price += 50
-        elif item == 'B':
-            self.price += 30
-        elif item == 'C':
-            self.price += 20
-        elif item == 'D':
-            self.price += 15
+        self.items += item
 
     @property
     def price(self):
-        return self._price
+        self.items = ''.join(sorted(self.items))
 
-    @price.setter
-    def price(self, value):
-        self._price = value
+        combo_3 = self._compute_combos(item_prices_three)
+        combo_2 = self._compute_combos(item_prices_two)
+        combo_1 = self._compute_combos(item_prices_one)
+
+        return combo_3 + combo_2 + combo_1
+
+    def _compute_combos(self, combos):
+        _price = 0
+
+        for combo, val in combos.iteritems():
+            if combo in self.items:
+                _price += self.items.count(combo) * val
+                self.items = self.items.replace(combo, '')
+
+        return _price

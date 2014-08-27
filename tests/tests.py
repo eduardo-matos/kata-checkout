@@ -24,8 +24,29 @@ class CheckoutTest(unittest.TestCase):
         self.co.scan('D')
         self.assertEqual(115, self.co.price)
 
-    def test_can_deal_with_discounts(self):
+    def test_can_deal_with_combo(self):
         self.co.scan('A')
         self.co.scan('A')
         self.co.scan('A')
         self.assertEqual(130, self.co.price)
+
+    def test_can_deal_with_multiple_combos(self):
+        self.co.scan('AAAA')
+        self.assertEqual(180, self.co.price)
+
+        self.co.scan('AAAAA')
+        self.assertEqual(230, self.co.price)
+
+        self.co.scan('AAAAAA')
+        self.assertEqual(260, self.co.price)
+
+    def test_can_deal_with_combos_from_distinct_products(self):
+        self.co.scan('AAAB')
+        self.assertEqual(160, self.co.price)
+
+        self.co.scan('AAABBC')
+        self.assertEqual(195, self.co.price)
+
+    def test_can_deal_with_unsorted_items(self):
+        self.co.scan('BABAAC')
+        self.assertEqual(195, self.co.price)
